@@ -1,4 +1,4 @@
-# Frontend Catálogo de Películas y Series
+# Frontend Catálogo de Discos y Vinilos
 
 Proyecto final del Bootcamp de Neoland Web Development.
 
