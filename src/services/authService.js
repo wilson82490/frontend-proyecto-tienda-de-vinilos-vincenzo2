@@ -1,6 +1,22 @@
-const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
+const getApiBase = () => {
+  const configuredBase = import.meta.env.VITE_API_URL;
+
+  if (!configuredBase) {
+    return "";
+  }
+
+  return configuredBase.replace(/\/+$/, "").replace(/\/api$/, "");
+};
+
+const API_URL = `${getApiBase()}/api/auth`;
 
 const handleResponse = async (response) => {
+  const contentType = response.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error("Respuesta inválida del servidor");
+  }
+
   const data = await response.json();
 
   if (!response.ok) {

@@ -15,8 +15,8 @@ function Adminlayout() {
           </div>
 
           <nav className="admin-nav">
-            <Link to="/admin/movies">Peliculas</Link>
-            <Link to="/movies">Ver sitio publico</Link>
+            <Link to="/admin/vinilos">Vinilos</Link>
+            <Link to="/vinilos">Ver sitio publico</Link>
           </nav>
 
           <Outlet />

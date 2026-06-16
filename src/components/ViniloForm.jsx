@@ -1,5 +1,5 @@
 import { categories } from "../data/categories";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const initialForm = {
   title: "",
@@ -10,10 +10,15 @@ const initialForm = {
   featured: false,
 };
 
-function MovieForm({ onCreateMovie, movie, onUpdateMovie, isSaving }) {
-  const [form, setForm] = useState(initialForm);
+const getInitialForm = (vinilo) => ({
+  ...initialForm,
+  ...vinilo,
+});
 
-  const isEditing = Boolean(movie);
+function ViniloForm({ onCreateVinilo, vinilo, onUpdateVinilo, isSaving }) {
+  const [form, setForm] = useState(() => getInitialForm(vinilo));
+
+  const isEditing = Boolean(vinilo);
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -54,32 +59,23 @@ function MovieForm({ onCreateMovie, movie, onUpdateMovie, isSaving }) {
     }
 
     if (isEditing) {
-      await onUpdateMovie(movie._id, form);
+      await onUpdateVinilo(vinilo._id, form);
     } else {
-      await onCreateMovie(form);
+      await onCreateVinilo(form);
     }
 
     setForm(initialForm);
   };
 
-  useEffect(() => {
-    if (movie) {
-      setForm({
-        ...initialForm,
-        ...movie,
-      });
-    }
-  }, [movie]);
-
   return (
-    <form className="movie-form" onSubmit={handleSubmit}>
-      <h2>{isEditing ? "Editar pelicula" : "Nueva Pelicula"}</h2>
+    <form className="vinilo-form" onSubmit={handleSubmit}>
+      <h2>{isEditing ? "Editar vinilo" : "Nuevo Vinilo"}</h2>
 
       <div className="form-group">
         <label htmlFor="title">Titulo: </label>
         <input
           type="text"
-          placeholder="Matrix"
+          placeholder="Abbey Road"
           id="title"
           name="title"
           value={form.title}
@@ -156,16 +152,16 @@ function MovieForm({ onCreateMovie, movie, onUpdateMovie, isSaving }) {
 
       <button
         disabled={isSaving}
-        className="button movie-form-button"
+        className="button vinilo-form-button"
         type="submit"
       >
         {/* {isSaving
           ? "Guardando"
           : isEditing
-            ? "Actualizar pelicula"
-            : "Crear pelicula"} */}
+            ? "Actualizar vinilo"
+            : "Crear vinilo"} */}
 
-        {isSaving ? "Guardando..." : "Guardar pelicula"}
+        {isSaving ? "Guardando..." : "Guardar vinilo"}
       </button>
 
       <pre>{JSON.stringify(form, null, 2)}</pre>
@@ -173,4 +169,4 @@ function MovieForm({ onCreateMovie, movie, onUpdateMovie, isSaving }) {
   );
 }
 
-export default MovieForm;
+export default ViniloForm;

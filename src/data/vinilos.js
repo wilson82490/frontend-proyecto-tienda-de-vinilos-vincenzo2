@@ -1,4 +1,4 @@
-export const movies = [
+export const vinilos = [
   {
     id: 1,
     title: "Breaking Bad",

@@ -13,11 +13,11 @@ function Navbar() {
   return (
     <nav className="header-item">
       <Link to="/">Inicio</Link>
-      <Link to="/movies">Peliculas</Link>
+      <Link to="/vinilos">Vinilos</Link>
 
       {user && user.admin && <Link to="/admin">Admin</Link>}
       {user && (
-        <button type="button" onClick={handleLogout}>
+        <button type="button" onClick={handleLogout} aria-label="Cerrar sesión">
           Logout
         </button>
       )}

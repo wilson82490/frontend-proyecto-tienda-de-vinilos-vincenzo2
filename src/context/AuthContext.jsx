@@ -9,7 +9,13 @@ const getInitialUser = () => {
     return null;
   }
 
-  return JSON.parse(storedUser);
+  try {
+    return JSON.parse(storedUser);
+  } catch {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    return null;
+  }
 };
 
 export const AuthProvider = ({ children }) => {
@@ -30,5 +36,9 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  return <AuthContext value={{ user, login, logout }}>{children}</AuthContext>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

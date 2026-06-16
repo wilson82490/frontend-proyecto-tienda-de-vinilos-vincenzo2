@@ -2,13 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
-import MoviePage from "../pages/MoviesPage";
-import MovieDetailPage from "../pages/MovieDetailPage";
+import ViniloPage from "../pages/VinilosPage";
+import ViniloDetailPage from "../pages/ViniloDetailPage";
 import NotFoundPage from "../pages/NotFoundPage";
 
 import Adminlayout from "../layouts/AdminLayout";
 import DashboardPage from "../pages/admin/DashboardPage";
-import AdminMoviesPage from "../pages/admin/AdminMoviesPage";
+import AdminVinilosPage from "../pages/admin/AdminVinilosPage";
 import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
 
@@ -25,12 +25,12 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "movies",
-        element: <MoviePage />,
+        path: "vinilos",
+        element: <ViniloPage />,
       },
       {
-        path: "movies/:id",
-        element: <MovieDetailPage />,
+        path: "vinilos/:id",
+        element: <ViniloDetailPage />,
       },
       // {
       //   path: "*",
@@ -62,9 +62,9 @@ export const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: "movies",
+        path: "vinilos",
         loader: adminLoader,
-        element: <AdminMoviesPage />,
+        element: <AdminVinilosPage />,
       },
     ],
   },

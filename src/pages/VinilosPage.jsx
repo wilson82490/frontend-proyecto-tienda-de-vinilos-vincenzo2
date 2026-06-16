@@ -1,11 +1,11 @@
-import MovieList from "../components/MovieList";
+import ViniloList from "../components/ViniloList";
 import { useState, useEffect } from "react";
-import { getMovies } from "../services/movieService";
-import MovieFilters from "../components/MovieFilters";
-import useFilteredSortedMovies from "../hooks/useFilteredSortedMovies";
+import { getVinilos } from "../services/viniloService";
+import ViniloFilters from "../components/ViniloFilters";
+import useFilteredSortedVinilos from "../hooks/useFilteredSortedVinilos";
 
-function MoviesPage() {
-  const [movies, setMovies] = useState([]);
+function VinilosPage() {
+  const [vinilos, setVinilos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -14,32 +14,32 @@ function MoviesPage() {
   const [sortBy, setSortBy] = useState("default");
 
   useEffect(() => {
-    const loadMovies = async () => {
+    const loadVinilos = async () => {
       try {
-        const data = await getMovies();
-        setMovies(data);
+        const data = await getVinilos();
+        setVinilos(data);
       } catch {
-        setError("No se pudieron cargar las peliculas");
+        setError("No se pudieron cargar los vinilos");
       } finally {
         setLoading(false);
       }
     };
-    loadMovies();
+    loadVinilos();
   }, []);
 
-  const { sortedMovies } = useFilteredSortedMovies(
-    movies,
+  const { sortedVinilos } = useFilteredSortedVinilos(
+    vinilos,
     search,
     selectedGenre,
     sortBy,
   );
 
-  const hasResults = sortedMovies.length > 0;
+  const hasResults = sortedVinilos.length > 0;
 
-  const genres = ["Todos", ...new Set(movies.map((movie) => movie.genre))];
+  const genres = ["Todos", ...new Set(vinilos.map((vinilo) => vinilo.genre))];
 
   if (loading) {
-    return <p className="empty-message">Cargando peliculas...</p>;
+    return <p className="empty-message">Cargando vinilos...</p>;
   }
 
   if (error) {
@@ -52,10 +52,10 @@ function MoviesPage() {
         <div className="container">
           <div className="section-header">
             <h2>Explorar catálogo</h2>
-            <p>Busca películas y series por título y descripción.</p>
+            <p>Busca vinilos por título y descripción.</p>
           </div>
 
-          <MovieFilters
+          <ViniloFilters
             search={search}
             selectedGenre={selectedGenre}
             sortBy={sortBy}
@@ -66,7 +66,7 @@ function MoviesPage() {
           />
 
           {hasResults ? (
-            <MovieList movies={sortedMovies} />
+            <ViniloList vinilos={sortedVinilos} />
           ) : (
             <p className="empty-message">
               No encontramos resultados para la búsqueda
@@ -78,4 +78,4 @@ function MoviesPage() {
   );
 }
 
-export default MoviesPage;
+export default VinilosPage;

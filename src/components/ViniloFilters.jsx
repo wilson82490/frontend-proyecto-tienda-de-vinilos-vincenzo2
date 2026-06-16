@@ -1,4 +1,4 @@
-function MovieFilters({
+function ViniloFilters({
   search,
   selectedGenre,
   sortBy,
@@ -8,7 +8,7 @@ function MovieFilters({
   onSortChange,
 }) {
   return (
-    <div className="movie-filters">
+    <div className="vinilo-filters">
       <div>
         <label className="search-label" htmlFor="search">
           Buscar por titulo o descripción:
@@ -50,4 +50,4 @@ function MovieFilters({
   );
 }
 
-export default MovieFilters;
+export default ViniloFilters;

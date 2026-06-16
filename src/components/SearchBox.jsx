@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-function SearchBox({ movies }) {
+function SearchBox({ vinilos }) {
   const [search, setSearch] = useState("");
 
   const normalizedSearch = search.toLowerCase().trim();
 
-  const results = movies
-    .filter((movie) => {
-      const title = movie.title.toLowerCase();
-      // const description = movie?.description?.toLowerCase();
-      const genre = movie.genre.toLowerCase();
+  const results = vinilos
+    .filter((vinilo) => {
+      const title = vinilo.title.toLowerCase();
+      // const description = vinilo?.description?.toLowerCase();
+      const genre = vinilo.genre.toLowerCase();
 
       return (
         title.includes(normalizedSearch) || genre.includes(normalizedSearch)
@@ -23,24 +23,25 @@ function SearchBox({ movies }) {
       <input
         className="search-box-input"
         type="search"
-        placeholder="Buscar..."
+        placeholder="Buscar vinilos..."
+        aria-label="Buscar vinilos por título o género"
         value={search}
         onChange={(event) => setSearch(event.target.value)}
       />
 
       {search.trim() != "" && (
-        <div className="search-box-results">
+        <div className="search-box-results" role="listbox" aria-label="Resultados de búsqueda">
           {results.length > 0 ? (
-            results.map((movie) => (
+            results.map((vinilo) => (
               <Link
-                key={movie._id}
+                key={vinilo._id}
                 onClick={() => setSearch("")}
                 className="search-box-result"
-                to={`/movies/${movie._id}`}
+                to={`/vinilos/${vinilo._id}`}
               >
-                <strong>{movie.title}</strong>
+                <strong>{vinilo.title}</strong>
                 <span>
-                  {movie.genre} - {movie.year}
+                  {vinilo.genre} - {vinilo.year}
                 </span>
               </Link>
             ))

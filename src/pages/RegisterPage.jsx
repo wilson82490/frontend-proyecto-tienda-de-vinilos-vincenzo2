@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../services/authService";
 
 const initialForm = {
@@ -12,6 +13,7 @@ const initialForm = {
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function RegisterPage() {
+  const navigate = useNavigate();
   const [form, setForm] = useState(initialForm);
 
   const [message, setMessage] = useState("");
@@ -81,6 +83,10 @@ function RegisterPage() {
       setMessage(data.message || "Usuario registrado correctamente");
 
       setForm(initialForm);
+
+      setTimeout(() => {
+        navigate("/auth/login");
+      }, 1200);
     } catch (error) {
       setError(error.message);
     }
@@ -157,6 +163,10 @@ function RegisterPage() {
             <button className="button" type="submit">
               Registrar
             </button>
+
+            <p>
+              ¿Ya tienes cuenta? <Link to="/auth/login">Inicia sesión</Link>
+            </p>
           </form>
         </div>
       </section>

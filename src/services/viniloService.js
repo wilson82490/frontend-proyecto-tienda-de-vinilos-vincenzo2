@@ -1,4 +1,14 @@
-const API_URL = `${import.meta.env.VITE_API_URL}/movies`;
+const getApiBase = () => {
+  const configuredBase = import.meta.env.VITE_API_URL;
+
+  if (!configuredBase) {
+    return "";
+  }
+
+  return configuredBase.replace(/\/+$/, "").replace(/\/api$/, "");
+};
+
+const API_URL = `${getApiBase()}/api/vinilos`;
 
 const getToken = () => {
   const token = localStorage.getItem("token");
@@ -6,6 +16,12 @@ const getToken = () => {
 };
 
 const handleResponse = async (response) => {
+  const contentType = response.headers.get("content-type") || "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error("Respuesta inválida del servidor");
+  }
+
   const data = await response.json();
 
   if (!response.ok) {
@@ -15,19 +31,19 @@ const handleResponse = async (response) => {
   return data;
 };
 
-export const getMovies = async () => {
+export const getVinilos = async () => {
   const response = await fetch(API_URL);
 
   return handleResponse(response);
 };
 
-export const getMovieById = async (movieId) => {
-  const response = await fetch(`${API_URL}/${movieId}`);
+export const getViniloById = async (viniloId) => {
+  const response = await fetch(`${API_URL}/${viniloId}`);
 
   return handleResponse(response);
 };
 
-export const createMovie = async (movieData) => {
+export const createVinilo = async (viniloData) => {
   const token = getToken();
 
   if (!token) {
@@ -37,36 +53,36 @@ export const createMovie = async (movieData) => {
   const response = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify(movieData),
+    body: JSON.stringify(viniloData),
   });
 
   return handleResponse(response);
 };
 
-export const updateMovie = async (movieId, movieData) => {
+export const updateVinilo = async (viniloId, viniloData) => {
   const token = getToken();
 
   if (!token) {
     throw new Error("No autorizado");
   }
 
-  const response = await fetch(`${API_URL}/${movieId}`, {
+  const response = await fetch(`${API_URL}/${viniloId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify(movieData),
+    body: JSON.stringify(viniloData),
   });
 
   return handleResponse(response);
 };
 
-export const deleteMovie = async (movieId) => {
+export const deleteVinilo = async (viniloId) => {
   const token = getToken();
 
   if (!token) {
     throw new Error("No autorizado");
   }
 
-  const response = await fetch(`${API_URL}/${movieId}`, {
+  const response = await fetch(`${API_URL}/${viniloId}`, {
     method: "DELETE",
     headers: { Authorization: token },
   });

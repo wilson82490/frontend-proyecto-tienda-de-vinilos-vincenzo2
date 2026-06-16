@@ -1,22 +1,22 @@
 export const categories = [
   {
     id: 1,
-    title: "Drama",
+    title: "Rock",
   },
   {
     id: 2,
-    title: "Ciencia ficción",
+    title: "Pop",
   },
   {
     id: 3,
-    title: "Acción",
+    title: "Jazz",
   },
   {
     id: 4,
-    title: "Drama histórico",
+    title: "Soul",
   },
   {
     id: 5,
-    title: "Fantasía",
+    title: "Hip hop",
   },
 ];

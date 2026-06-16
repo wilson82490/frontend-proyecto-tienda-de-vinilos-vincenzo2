@@ -1,48 +1,48 @@
 import { useEffect, useState, useRef } from "react";
-import MovieForm from "../../components/MovieForm";
+import ViniloForm from "../../components/ViniloForm";
 import {
-  createMovie,
-  deleteMovie,
-  getMovies,
-  updateMovie,
-} from "../../services/movieService";
+  createVinilo,
+  deleteVinilo,
+  getVinilos,
+  updateVinilo,
+} from "../../services/viniloService";
 
-function AdminMoviesPage() {
+function AdminVinilosPage() {
   const [showForm, setShowForm] = useState(false);
-  const [movies, setMovies] = useState([]);
+  const [vinilos, setVinilos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [selectedVinilo, setSelectedVinilo] = useState(null);
   const [message, setMessage] = useState("");
-  const [movieToDelete, setMovieToDelete] = useState(null);
+  const [viniloToDelete, setViniloToDelete] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
   const messageRef = useRef(null);
   const formRef = useRef(null);
 
   useEffect(() => {
-    const loadMovies = async () => {
+    const loadVinilos = async () => {
       try {
-        const data = await getMovies();
-        setMovies(data);
+        const data = await getVinilos();
+        setVinilos(data);
       } catch {
-        setError("No se pudieron cargar la peliculas");
+        setError("No se pudieron cargar los vinilos");
       } finally {
         setLoading(false);
       }
     };
-    loadMovies();
+    loadVinilos();
   }, []);
 
-  const handleCreateMovie = async (movieData) => {
+  const handleCreateVinilo = async (viniloData) => {
     try {
       setIsSaving(true);
 
-      const newMovie = await createMovie(movieData);
+      const newVinilo = await createVinilo(viniloData);
 
-      setMovies([...movies, newMovie]);
+      setVinilos([...vinilos, newVinilo]);
       setShowForm(false);
-      setMessage("Pelicula creada correctamente");
+      setMessage("Vinilo creado correctamente");
     } catch (error) {
       setError(error.message);
     } finally {
@@ -50,18 +50,18 @@ function AdminMoviesPage() {
     }
   };
 
-  const handleDeleteMovie = async (id) => {
+  const handleDeleteVinilo = async (id) => {
     try {
       setIsSaving(true);
 
-      await deleteMovie(id);
+      await deleteVinilo(id);
 
-      const filteredMovies = movies.filter((movie) => movie._id != id);
+      const filteredVinilos = vinilos.filter((vinilo) => vinilo._id != id);
 
-      setMovies(filteredMovies);
-      setMovieToDelete(null);
+      setVinilos(filteredVinilos);
+      setViniloToDelete(null);
 
-      setMessage("Pelicula eliminada correctamente");
+      setMessage("Vinilo eliminado correctamente");
     } catch (error) {
       setError(error.message);
     } finally {
@@ -69,25 +69,25 @@ function AdminMoviesPage() {
     }
   };
 
-  const handleUpdateMovie = async (movieId, movieData) => {
+  const handleUpdateVinilo = async (viniloId, viniloData) => {
     try {
       setIsSaving(true);
 
-      const updatedMovie = await updateMovie(movieId, movieData);
+      const updatedVinilo = await updateVinilo(viniloId, viniloData);
 
-      const updatedMovies = movies.map((movie) => {
-        if (movie._id == movieId) {
-          return updatedMovie;
+      const updatedVinilos = vinilos.map((vinilo) => {
+        if (vinilo._id == viniloId) {
+          return updatedVinilo;
         }
 
-        return movie;
+        return vinilo;
       });
 
-      setMovies(updatedMovies);
-      setSelectedMovie(null);
+      setVinilos(updatedVinilos);
+      setSelectedVinilo(null);
       setShowForm(false);
 
-      setMessage("Pelicula actualizada correctamente");
+      setMessage("Vinilo actualizado correctamente");
     } catch (error) {
       setError(error.message);
     } finally {
@@ -111,19 +111,19 @@ function AdminMoviesPage() {
   }, [message]);
 
   useEffect(() => {
-    if (!movieToDelete) {
+    if (!viniloToDelete) {
       return;
     }
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
-        setMovieToDelete(null);
+        setViniloToDelete(null);
       }
     });
-  }, [movieToDelete]);
+  }, [viniloToDelete]);
 
   useEffect(() => {
-    if (!selectedMovie) {
+    if (!selectedVinilo) {
       return;
     }
 
@@ -131,10 +131,10 @@ function AdminMoviesPage() {
       behavior: "smooth",
       block: "start",
     });
-  }, [selectedMovie]);
+  }, [selectedVinilo]);
 
   if (loading) {
-    return <p className="empty-message">Cargando peliculas...</p>;
+    return <p className="empty-message">Cargando vinilos...</p>;
   }
 
   if (error) {
@@ -151,8 +151,8 @@ function AdminMoviesPage() {
 
       <div className="admin-page-header">
         <div>
-          <h2>Administración de películas</h2>
-          <p>Listado interno de películas y series.</p>
+          <h2>Administración de vinilos</h2>
+          <p>Listado interno de vinilos.</p>
         </div>
 
         <button
@@ -160,32 +160,33 @@ function AdminMoviesPage() {
           type="button"
           onClick={() => {
             setShowForm(!showForm);
-            setSelectedMovie(null);
+            setSelectedVinilo(null);
           }}
         >
-          {showForm ? "Cerrar el formulario" : "Nueva película"}
+          {showForm ? "Cerrar el formulario" : "Nuevo vinilo"}
         </button>
       </div>
 
       {showForm && (
         <div ref={formRef}>
-          <MovieForm
-            movie={selectedMovie}
-            onCreateMovie={handleCreateMovie}
-            onUpdateMovie={handleUpdateMovie}
+          <ViniloForm
+            key={selectedVinilo?._id || "new-vinilo"}
+            vinilo={selectedVinilo}
+            onCreateVinilo={handleCreateVinilo}
+            onUpdateVinilo={handleUpdateVinilo}
             isSaving={isSaving}
           />
         </div>
       )}
 
       <div className="admin-list">
-        {movies.map((movie) => (
-          <article className="admin-list-item" key={movie._id}>
-            <img src={movie.image} alt={movie.title} />
+        {vinilos.map((vinilo) => (
+          <article className="admin-list-item" key={vinilo._id}>
+            <img src={vinilo.image} alt={vinilo.title} />
             <div>
-              <h3>{movie.title}</h3>
+              <h3>{vinilo.title}</h3>
               <p>
-                {movie.genre} • {movie.year}{" "}
+                {vinilo.genre} • {vinilo.year}{" "}
               </p>
 
               <div className="admin-actions">
@@ -193,7 +194,7 @@ function AdminMoviesPage() {
                   className="admin-action-button edit"
                   type="button"
                   onClick={() => {
-                    setSelectedMovie(movie);
+                    setSelectedVinilo(vinilo);
                     setShowForm(true);
                   }}
                 >
@@ -202,7 +203,7 @@ function AdminMoviesPage() {
                 <button
                   className="admin-action-button delete"
                   type="button"
-                  onClick={() => setMovieToDelete(movie)}
+                  onClick={() => setViniloToDelete(vinilo)}
                 >
                   Eliminar
                 </button>
@@ -212,13 +213,13 @@ function AdminMoviesPage() {
         ))}
       </div>
 
-      {movieToDelete && (
-        <div className="modal-overlay" onClick={() => setMovieToDelete(null)}>
+      {viniloToDelete && (
+        <div className="modal-overlay" onClick={() => setViniloToDelete(null)}>
           <div className="modal" onClick={(event) => event.stopPropagation()}>
-            <h2>Eliminar película</h2>
+            <h2>Eliminar vinilo</h2>
 
             <p>
-              ¿Desea eliminar <strong>{movieToDelete.title}</strong>?
+              ¿Desea eliminar <strong>{viniloToDelete.title}</strong>?
             </p>
 
             <div className="modal-actions">
@@ -226,7 +227,7 @@ function AdminMoviesPage() {
                 disabled={isSaving}
                 className="modal-button secondary"
                 type="button"
-                onClick={() => setMovieToDelete(null)}
+                onClick={() => setViniloToDelete(null)}
               >
                 Cancelar
               </button>
@@ -235,7 +236,7 @@ function AdminMoviesPage() {
                 disabled={isSaving}
                 className="modal-button danger"
                 type="button"
-                onClick={() => handleDeleteMovie(movieToDelete._id)}
+                onClick={() => handleDeleteVinilo(viniloToDelete._id)}
               >
                 {isSaving ? "Eliminando..." : "Eliminar"}
               </button>
@@ -247,4 +248,4 @@ function AdminMoviesPage() {
   );
 }
 
-export default AdminMoviesPage;
+export default AdminVinilosPage;

@@ -1,16 +1,16 @@
-function useFilteredSortedMovies(movies, search, selectedGenre, sortBy) {
-  const filteredMovies = movies.filter((movie) => {
+function useFilteredSortedVinilos(vinilos, search, selectedGenre, sortBy) {
+  const filteredVinilos = vinilos.filter((vinilo) => {
     const matchesSearch =
-      movie.title.toLowerCase().includes(search.toLowerCase()) ||
-      movie?.description?.toLowerCase().includes(search.toLowerCase());
+      vinilo.title.toLowerCase().includes(search.toLowerCase()) ||
+      vinilo?.description?.toLowerCase().includes(search.toLowerCase());
 
     const matchesGenre =
-      selectedGenre === "Todos" || movie.genre === selectedGenre;
+      selectedGenre === "Todos" || vinilo.genre === selectedGenre;
 
     return matchesSearch && matchesGenre;
   });
 
-  const sortedMovies = [...filteredMovies].sort((a, b) => {
+  const sortedVinilos = [...filteredVinilos].sort((a, b) => {
     if (sortBy === "az") {
       if (a.title < b.title) return -1;
       if (a.title > b.title) return 1;
@@ -32,7 +32,7 @@ function useFilteredSortedMovies(movies, search, selectedGenre, sortBy) {
     return 0;
   });
 
-  return { filteredMovies, sortedMovies };
+  return { filteredVinilos, sortedVinilos };
 }
 
-export default useFilteredSortedMovies;
+export default useFilteredSortedVinilos;

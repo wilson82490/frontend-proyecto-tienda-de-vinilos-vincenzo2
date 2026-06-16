@@ -1,38 +1,38 @@
-import MovieList from "../components/MovieList";
+import ViniloList from "../components/ViniloList";
 import { Link } from "react-router-dom";
-import MovieCarousel from "../components/MovieCarousel";
+import ViniloCarousel from "../components/ViniloCarousel";
 import { useState, useEffect } from "react";
-import { getMovies } from "../services/movieService";
+import { getVinilos } from "../services/viniloService";
 
 function Home() {
-  const [movies, setMovies] = useState([]);
+  const [vinilos, setVinilos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // const modaProducts = movies.filter((product) =>
+  // const modaProducts = vinilos.filter((product) =>
   //   product?.category?.startsWith("Moda"),
   // );
 
   useEffect(() => {
-    const loadMovies = async () => {
+    const loadVinilos = async () => {
       try {
-        const data = await getMovies();
+        const data = await getVinilos();
         // console.log(data);
-        setMovies(data);
+        setVinilos(data);
       } catch {
-        setError("No se pudieron cargar la peliculas");
+        setError("No se pudieron cargar los vinilos");
       } finally {
         setLoading(false);
       }
     };
-    loadMovies();
+    loadVinilos();
   }, []);
 
-  const featuredMovies = movies.filter((movie) => movie.featured);
-  const newMovies = movies.slice(0, 3); // 3 primeras
+  const featuredVinilos = vinilos.filter((vinilo) => vinilo.featured);
+  const newVinilos = vinilos.slice(0, 3); // 3 primeras
 
   if (loading) {
-    return <p className="empty-message">Cargando peliculas...</p>;
+    return <p className="empty-message">Cargando vinilos...</p>;
   }
 
   if (error) {
@@ -45,15 +45,15 @@ function Home() {
         <div className="container">
           {/* <img src="https://picsum.photos/1100/200" alt="Lorem Picsum" /> */}
           <span className="hero-label">Proyecto final</span>
-          <h1>Catálogo de Películas y Series</h1>
+          <h1>Catálogo de Vinilos</h1>
           <p>
-            Explora películas y series, consulta sus detalles y administra el
+            Explora vinilos, consulta sus detalles y administra el
             contenido desde un panel privado.
           </p>
 
-          {/* <SearchBox movies={movies} /> */}
+          {/* <SearchBox vinilos={vinilos} /> */}
 
-          <Link className="button" to="/movies">
+          <Link className="button" to="/vinilos">
             Ver catálogo
           </Link>
         </div>
@@ -63,17 +63,17 @@ function Home() {
         <div className="container">
           <h2>Contenido destacado</h2>
 
-          <MovieList movies={featuredMovies} />
+          <ViniloList vinilos={featuredVinilos} />
         </div>
       </section>
 
-      <MovieCarousel movies={movies} />
+      <ViniloCarousel vinilos={vinilos} />
 
-      <section className="new-movies-section">
+      <section className="new-vinilos-section">
         <div className="container">
-          <h2>Nuevas peliculas</h2>
+          <h2>Nuevos vinilos</h2>
 
-          <MovieList movies={newMovies} />
+          <ViniloList vinilos={newVinilos} />
         </div>
       </section>
     </main>

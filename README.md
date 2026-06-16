@@ -1,10 +1,10 @@
-# Frontend Catálogo de Películas y Series
+# Frontend Catálogo de Vinilos
 
 Proyecto final del Bootcamp de Neoland Web Development.
 
 ## Descripcion
 
-Aplicación web para gestionar un catálogo de películas y series.
+Aplicación web para gestionar un catálogo de vinilos.
 
 ## Tecnologias
 
@@ -16,7 +16,7 @@ Aplicación web para gestionar un catálogo de películas y series.
 ## Clonar el repositorio
 
 ```shell
-git clone https://github.com/jepafeneo/frontend-proyecto-peliculas-series-jean-paul
+git clone https://github.com/jepafeneo/frontend-proyecto-tienda-de-vinilos-vincenzo2
 
 git switch dev
 ```

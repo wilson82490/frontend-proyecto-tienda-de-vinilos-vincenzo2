@@ -68,13 +68,17 @@ function LoginPage() {
 
       const data = await login(user);
 
-      context.login(data);
+      context.login({ token: data.token, user: data.user });
 
       setMessage(data.message || "Sesión iniciada correctamente");
 
       setForm(initialForm);
 
-      navigate("/admin/movies");
+      if (data.user?.admin) {
+        navigate("/admin/vinilos");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       setError(error.message);
     }
