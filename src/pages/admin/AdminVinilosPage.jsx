@@ -3,6 +3,7 @@ import ViniloForm from "../../components/ViniloForm";
 import {
   createVinilo,
   deleteVinilo,
+  getViniloById,
   getVinilos,
   updateVinilo,
 } from "../../services/viniloService";
@@ -193,9 +194,17 @@ function AdminVinilosPage() {
                 <button
                   className="admin-action-button edit"
                   type="button"
-                  onClick={() => {
-                    setSelectedVinilo(vinilo);
-                    setShowForm(true);
+                  onClick={async () => {
+                    try {
+                      setError("");
+                      const fullVinilo = await getViniloById(vinilo._id);
+                      setSelectedVinilo(fullVinilo);
+                      setShowForm(true);
+                    } catch (error) {
+                      setMessage(
+                        error.message || "No se pudo cargar el vinilo",
+                      );
+                    }
                   }}
                 >
                   Editar

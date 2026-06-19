@@ -15,6 +15,21 @@ const getToken = () => {
   return token ? `Bearer ${token}` : null;
 };
 
+const toViniloPayload = (viniloData) => {
+  if (!viniloData || typeof viniloData !== "object" || Array.isArray(viniloData)) {
+    throw new Error("Datos de vinilo inválidos");
+  }
+
+  return {
+    title: String(viniloData.title ?? "").trim(),
+    description: String(viniloData.description ?? "").trim(),
+    genre: String(viniloData.genre ?? "").trim(),
+    year: Number(viniloData.year),
+    image: String(viniloData.image ?? "").trim(),
+    featured: Boolean(viniloData.featured),
+  };
+};
+
 const handleResponse = async (response) => {
   const contentType = response.headers.get("content-type") || "";
 
@@ -53,7 +68,7 @@ export const createVinilo = async (viniloData) => {
   const response = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify(viniloData),
+    body: JSON.stringify(toViniloPayload(viniloData)),
   });
 
   return handleResponse(response);
@@ -66,10 +81,14 @@ export const updateVinilo = async (viniloId, viniloData) => {
     throw new Error("No autorizado");
   }
 
-  const response = await fetch(`${API_URL}/${viniloId}`, {
+  if (!viniloId) {
+    throw new Error("ID de vinilo inválido");
+  }
+
+  const response = await fetch(`${API_URL}/${encodeURIComponent(String(viniloId))}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: token },
-    body: JSON.stringify(viniloData),
+    body: JSON.stringify(toViniloPayload(viniloData)),
   });
 
   return handleResponse(response);

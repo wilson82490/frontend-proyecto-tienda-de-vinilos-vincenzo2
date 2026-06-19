@@ -43,10 +43,13 @@ function Home() {
     <main>
       <section className="hero">
         <div className="container">
-          <img
-            src="/images/logoEncabezadero.png"
-            alt="Logo Catálogo de Vinilos"
-          />
+          <div className="hero-logo-wrap">
+            <img
+              src="/images/logoEncabezadero.png"
+              alt="Logo Catálogo de Vinilos"
+              className="hero-logo"
+            />
+          </div>
           <span className="hero-label">Proyecto final</span>
           <h1>Catálogo de Vinilos</h1>
           <p>
