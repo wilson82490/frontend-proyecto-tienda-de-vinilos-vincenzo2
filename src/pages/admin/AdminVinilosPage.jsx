@@ -12,7 +12,8 @@ function AdminVinilosPage() {
   const [showForm, setShowForm] = useState(false);
   const [vinilos, setVinilos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [selectedVinilo, setSelectedVinilo] = useState(null);
   const [message, setMessage] = useState("");
   const [viniloToDelete, setViniloToDelete] = useState(null);
@@ -24,10 +25,10 @@ function AdminVinilosPage() {
   useEffect(() => {
     const loadVinilos = async () => {
       try {
-        const data = await getVinilos();
+        const { data } = await getVinilos({ limit: 100 });
         setVinilos(data);
       } catch {
-        setError("No se pudieron cargar los vinilos");
+        setLoadError("No se pudieron cargar los vinilos");
       } finally {
         setLoading(false);
       }
@@ -38,6 +39,7 @@ function AdminVinilosPage() {
   const handleCreateVinilo = async (viniloData) => {
     try {
       setIsSaving(true);
+      setActionError("");
 
       const newVinilo = await createVinilo(viniloData);
 
@@ -45,7 +47,7 @@ function AdminVinilosPage() {
       setShowForm(false);
       setMessage("Vinilo creado correctamente");
     } catch (error) {
-      setError(error.message);
+      setActionError(error.message);
     } finally {
       setIsSaving(false);
     }
@@ -54,6 +56,7 @@ function AdminVinilosPage() {
   const handleDeleteVinilo = async (id) => {
     try {
       setIsSaving(true);
+      setActionError("");
 
       await deleteVinilo(id);
 
@@ -64,7 +67,7 @@ function AdminVinilosPage() {
 
       setMessage("Vinilo eliminado correctamente");
     } catch (error) {
-      setError(error.message);
+      setActionError(error.message);
     } finally {
       setIsSaving(false);
     }
@@ -73,6 +76,7 @@ function AdminVinilosPage() {
   const handleUpdateVinilo = async (viniloId, viniloData) => {
     try {
       setIsSaving(true);
+      setActionError("");
 
       const updatedVinilo = await updateVinilo(viniloId, viniloData);
 
@@ -90,7 +94,7 @@ function AdminVinilosPage() {
 
       setMessage("Vinilo actualizado correctamente");
     } catch (error) {
-      setError(error.message);
+      setActionError(error.message);
     } finally {
       setIsSaving(false);
     }
@@ -116,11 +120,17 @@ function AdminVinilosPage() {
       return;
     }
 
-    document.addEventListener("keydown", (event) => {
+    const handleEscape = (event) => {
       if (event.key === "Escape") {
         setViniloToDelete(null);
       }
-    });
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, [viniloToDelete]);
 
   useEffect(() => {
@@ -138,8 +148,8 @@ function AdminVinilosPage() {
     return <p className="empty-message">Cargando vinilos...</p>;
   }
 
-  if (error) {
-    return <p className="empty-message">{error}</p>;
+  if (loadError) {
+    return <p className="empty-message">{loadError}</p>;
   }
 
   return (
@@ -149,6 +159,8 @@ function AdminVinilosPage() {
           {message}
         </p>
       )}
+
+      {actionError && <p className="auth-error">{actionError}</p>}
 
       <div className="admin-page-header">
         <div>
@@ -162,6 +174,7 @@ function AdminVinilosPage() {
           onClick={() => {
             setShowForm(!showForm);
             setSelectedVinilo(null);
+            setActionError("");
           }}
         >
           {showForm ? "Cerrar el formulario" : "Nuevo vinilo"}
@@ -196,12 +209,12 @@ function AdminVinilosPage() {
                   type="button"
                   onClick={async () => {
                     try {
-                      setError("");
+                      setActionError("");
                       const fullVinilo = await getViniloById(vinilo._id);
                       setSelectedVinilo(fullVinilo);
                       setShowForm(true);
                     } catch (error) {
-                      setMessage(
+                      setActionError(
                         error.message || "No se pudo cargar el vinilo",
                       );
                     }

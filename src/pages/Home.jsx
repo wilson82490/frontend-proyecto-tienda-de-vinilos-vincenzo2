@@ -16,8 +16,7 @@ function Home() {
   useEffect(() => {
     const loadVinilos = async () => {
       try {
-        const data = await getVinilos();
-        // console.log(data);
+        const { data } = await getVinilos({ limit: 100 });
         setVinilos(data);
       } catch {
         setError("No se pudieron cargar los vinilos");

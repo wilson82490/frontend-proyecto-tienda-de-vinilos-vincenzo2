@@ -28,6 +28,7 @@ const getSortParams = (sortBy) => {
 
 function VinilosPage() {
   const [vinilos, setVinilos] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -44,7 +45,7 @@ function VinilosPage() {
 
         const { sortBy: apiSortBy, order } = getSortParams(sortBy);
 
-        const data = await getVinilos({
+        const { data, totalPages: pages } = await getVinilos({
           sortBy: apiSortBy,
           order,
           search,
@@ -54,6 +55,7 @@ function VinilosPage() {
         });
 
         setVinilos(data);
+        setTotalPages(pages);
       } catch {
         setError("No se pudieron cargar los vinilos");
       } finally {
@@ -80,7 +82,7 @@ function VinilosPage() {
   };
 
   const hasResults = vinilos.length > 0;
-  const hasNextPage = vinilos.length === LIMIT;
+  const hasNextPage = page < totalPages;
   const hasPrevPage = page > 1;
 
   const genres = ["Todos", ...categories.map((category) => category.title)];

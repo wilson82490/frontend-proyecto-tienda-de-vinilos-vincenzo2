@@ -2,7 +2,7 @@ import {describe, it, expect} from 'vitest';
 import {render, screen} from "@testing-library/react";
 import {MemoryRouter} from "react-router-dom";
 import Navbar from '../components/Navbar';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from "../context/AuthContext.jsx";
 
 describe("Navbar", () => {
     it ("espero que muestre el registro y el login", () => {
