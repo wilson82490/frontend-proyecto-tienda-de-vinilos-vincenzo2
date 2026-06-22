@@ -46,8 +46,27 @@ const handleResponse = async (response) => {
   return data;
 };
 
-export const getVinilos = async () => {
-  const response = await fetch(API_URL);
+export const getVinilos = async ({
+  sortBy = "title",
+  order = "asc",
+  search = "",
+  genre,
+  page = 1,
+  limit = 4,
+} = {}) => {
+  const params = new URLSearchParams({
+    sortBy,
+    order,
+    search,
+    page: String(page),
+    limit: String(limit),
+  });
+
+  if (genre) {
+    params.set("genre", genre);
+  }
+
+  const response = await fetch(`${API_URL}?${params.toString()}`);
 
   return handleResponse(response);
 };

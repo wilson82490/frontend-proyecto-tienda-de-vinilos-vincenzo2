@@ -2,7 +2,29 @@ import ViniloList from "../components/ViniloList";
 import { useState, useEffect } from "react";
 import { getVinilos } from "../services/viniloService";
 import ViniloFilters from "../components/ViniloFilters";
-import useFilteredSortedVinilos from "../hooks/useFilteredSortedVinilos";
+import { categories } from "../data/categories";
+
+const LIMIT = 4;
+
+const getSortParams = (sortBy) => {
+  if (sortBy === "az") {
+    return { sortBy: "title", order: "asc" };
+  }
+
+  if (sortBy === "za") {
+    return { sortBy: "title", order: "desc" };
+  }
+
+  if (sortBy === "newest") {
+    return { sortBy: "year", order: "desc" };
+  }
+
+  if (sortBy === "oldest") {
+    return { sortBy: "year", order: "asc" };
+  }
+
+  return { sortBy: "title", order: "asc" };
+};
 
 function VinilosPage() {
   const [vinilos, setVinilos] = useState([]);
@@ -12,11 +34,25 @@ function VinilosPage() {
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("Todos");
   const [sortBy, setSortBy] = useState("default");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const loadVinilos = async () => {
       try {
-        const data = await getVinilos();
+        setLoading(true);
+        setError("");
+
+        const { sortBy: apiSortBy, order } = getSortParams(sortBy);
+
+        const data = await getVinilos({
+          sortBy: apiSortBy,
+          order,
+          search,
+          genre: selectedGenre !== "Todos" ? selectedGenre : undefined,
+          page,
+          limit: LIMIT,
+        });
+
         setVinilos(data);
       } catch {
         setError("No se pudieron cargar los vinilos");
@@ -24,19 +60,30 @@ function VinilosPage() {
         setLoading(false);
       }
     };
+
     loadVinilos();
-  }, []);
+  }, [search, selectedGenre, sortBy, page]);
 
-  const { sortedVinilos } = useFilteredSortedVinilos(
-    vinilos,
-    search,
-    selectedGenre,
-    sortBy,
-  );
+  const handleSearchChange = (value) => {
+    setSearch(value);
+    setPage(1);
+  };
 
-  const hasResults = sortedVinilos.length > 0;
+  const handleGenreChange = (value) => {
+    setSelectedGenre(value);
+    setPage(1);
+  };
 
-  const genres = ["Todos", ...new Set(vinilos.map((vinilo) => vinilo.genre))];
+  const handleSortChange = (value) => {
+    setSortBy(value);
+    setPage(1);
+  };
+
+  const hasResults = vinilos.length > 0;
+  const hasNextPage = vinilos.length === LIMIT;
+  const hasPrevPage = page > 1;
+
+  const genres = ["Todos", ...categories.map((category) => category.title)];
 
   if (loading) {
     return <p className="empty-message">Cargando vinilos...</p>;
@@ -60,13 +107,37 @@ function VinilosPage() {
             selectedGenre={selectedGenre}
             sortBy={sortBy}
             genres={genres}
-            onSearchChange={setSearch}
-            onGenreChange={setSelectedGenre}
-            onSortChange={setSortBy}
+            onSearchChange={handleSearchChange}
+            onGenreChange={handleGenreChange}
+            onSortChange={handleSortChange}
           />
 
           {hasResults ? (
-            <ViniloList vinilos={sortedVinilos} />
+            <>
+              <ViniloList vinilos={vinilos} />
+
+              <div className="vinilo-pagination">
+                <button
+                  className="button"
+                  type="button"
+                  disabled={!hasPrevPage}
+                  onClick={() => setPage((currentPage) => currentPage - 1)}
+                >
+                  Anterior
+                </button>
+
+                <span>Página {page}</span>
+
+                <button
+                  className="button"
+                  type="button"
+                  disabled={!hasNextPage}
+                  onClick={() => setPage((currentPage) => currentPage + 1)}
+                >
+                  Siguiente
+                </button>
+              </div>
+            </>
           ) : (
             <p className="empty-message">
               No encontramos resultados para la búsqueda
