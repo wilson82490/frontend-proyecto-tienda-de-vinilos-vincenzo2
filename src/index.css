@@ -228,7 +228,6 @@ img {
   margin: 0;
   object-fit: cover;
   object-position: center;
-  transform: scale();
 }
 
 .hero h1 {
@@ -282,6 +281,22 @@ img {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(232, 163, 23, 0.35);
   filter: brightness(1.08);
+}
+
+.button:disabled,
+.pagination-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+  box-shadow: none;
+}
+
+.button:disabled:hover,
+.pagination-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+  filter: none;
 }
 
 .site-footer {
@@ -390,7 +405,12 @@ img {
 }
 
 .search-label {
-  display: none;
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .search-input {
@@ -481,6 +501,28 @@ img {
   color: var(--accent-warm);
   font-weight: 700;
   font-size: 1.25rem;
+}
+
+.vinilo-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.vinilo-detail-genre,
+.vinilo-detail-year {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-surface);
+  color: var(--accent-warm);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .vinilo-detail-description {
@@ -605,11 +647,13 @@ img {
   border: 1px solid var(--border);
 }
 
+.admin-list-item h3,
 .admin-list-content h3 {
   margin: 0;
   font-size: 1.25rem;
 }
 
+.admin-list-item p,
 .admin-list-content p {
   margin: 0.4rem 0 1rem;
   color: var(--text-muted);
@@ -670,6 +714,17 @@ img {
 .form-group textarea {
   min-height: 120px;
   resize: vertical;
+}
+
+.form-group input[type="checkbox"] {
+  width: auto;
+  accent-color: var(--accent-amber);
+  cursor: pointer;
+}
+
+.form-group:has(input[type="checkbox"]) {
+  grid-template-columns: 1fr auto;
+  align-items: center;
 }
 
 .image-preview {
@@ -920,11 +975,55 @@ img {
 .vinilo-filters {
   display: grid;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   padding: 1.25rem;
   background-color: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
+}
+
+.vinilo-filters .search-input,
+.vinilo-filters .filter-select {
+  margin-bottom: 0;
+}
+
+.catalog-results {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.catalog-status {
+  margin: 0 0 1rem;
+  color: var(--accent-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.vinilo-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.pagination-button {
+  margin-top: 0;
+  min-width: 120px;
+  border: none;
+  cursor: pointer;
+}
+
+.pagination-info {
+  min-width: 140px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
 /* Authentication */
@@ -976,7 +1075,99 @@ img {
   border: 1px solid rgba(254, 202, 202, 0.2);
 }
 
+.auth-footer {
+  margin: 0.5rem 0 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.auth-footer a {
+  color: var(--accent-warm);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.auth-footer a:hover {
+  color: var(--accent-amber);
+}
+
+.not-found-section {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+}
+
+.not-found-content {
+  text-align: center;
+}
+
+.not-found-content h1 {
+  font-size: clamp(2rem, 6vw, 3rem);
+  margin-bottom: 0.75rem;
+}
+
+.not-found-content p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
 /* Media queries */
+
+@media (max-width: 767px) {
+  .header-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .header-content nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1rem;
+  }
+
+  .search-box {
+    max-width: none;
+    justify-self: stretch;
+  }
+
+  .hero {
+    padding: 48px 1rem 64px;
+  }
+
+  .hero-logo-wrap {
+    border-radius: var(--radius-xl);
+  }
+
+  .vinilo-pagination {
+    flex-direction: column;
+  }
+
+  .pagination-button {
+    width: 100%;
+  }
+
+  .admin-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-create-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .admin-list-item {
+    grid-template-columns: 72px 1fr;
+  }
+
+  .admin-list-item img {
+    width: 72px;
+    height: 96px;
+  }
+}
 
 @media (min-width: 768px) {
   .vinilo-filters {

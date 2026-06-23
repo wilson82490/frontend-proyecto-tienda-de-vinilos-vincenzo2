@@ -1,8 +1,7 @@
 import ViniloList from "../components/ViniloList";
 import { useState, useEffect } from "react";
-import { getVinilos } from "../services/viniloService";
+import { getVinilos, getVinilosGenres } from "../services/viniloService";
 import ViniloFilters from "../components/ViniloFilters";
-import { categories } from "../data/categories";
 
 const LIMIT = 4;
 
@@ -29,13 +28,38 @@ const getSortParams = (sortBy) => {
 function VinilosPage() {
   const [vinilos, setVinilos] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [selectedGenre, setSelectedGenre] = useState("Todos");
+  const [selectedGenre, setSelectedGenre] = useState("");
   const [sortBy, setSortBy] = useState("default");
   const [page, setPage] = useState(1);
+  const [genres, setGenres] = useState([]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  useEffect(() => {
+    const loadGenres = async () => {
+      try {
+        const data = await getVinilosGenres();
+        setGenres(data);
+      } catch {
+        setError("No se pudieron cargar los géneros");
+      }
+    };
+
+    loadGenres();
+  }, []);
 
   useEffect(() => {
     const loadVinilos = async () => {
@@ -45,17 +69,18 @@ function VinilosPage() {
 
         const { sortBy: apiSortBy, order } = getSortParams(sortBy);
 
-        const { data, totalPages: pages } = await getVinilos({
+        const data = await getVinilos({
           sortBy: apiSortBy,
           order,
           search,
-          genre: selectedGenre !== "Todos" ? selectedGenre : undefined,
+          genre: selectedGenre || undefined,
           page,
           limit: LIMIT,
         });
 
-        setVinilos(data);
-        setTotalPages(pages);
+        setVinilos(data.vinilos);
+        setTotalPages(data.totalPages);
+        setTotalItems(data.totalItems);
       } catch {
         setError("No se pudieron cargar los vinilos");
       } finally {
@@ -65,11 +90,6 @@ function VinilosPage() {
 
     loadVinilos();
   }, [search, selectedGenre, sortBy, page]);
-
-  const handleSearchChange = (value) => {
-    setSearch(value);
-    setPage(1);
-  };
 
   const handleGenreChange = (value) => {
     setSelectedGenre(value);
@@ -85,14 +105,28 @@ function VinilosPage() {
   const hasNextPage = page < totalPages;
   const hasPrevPage = page > 1;
 
-  const genres = ["Todos", ...categories.map((category) => category.title)];
-
-  if (loading) {
-    return <p className="empty-message">Cargando vinilos...</p>;
+  if (loading && vinilos.length === 0 && !error) {
+    return (
+      <main>
+        <section className="catalog-section">
+          <div className="container">
+            <p className="empty-message">Cargando vinilos...</p>
+          </div>
+        </section>
+      </main>
+    );
   }
 
-  if (error) {
-    return <p className="empty-message">{error}</p>;
+  if (error && vinilos.length === 0) {
+    return (
+      <main>
+        <section className="catalog-section">
+          <div className="container">
+            <p className="empty-message">{error}</p>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -105,22 +139,28 @@ function VinilosPage() {
           </div>
 
           <ViniloFilters
-            search={search}
+            search={searchInput}
             selectedGenre={selectedGenre}
             sortBy={sortBy}
             genres={genres}
-            onSearchChange={handleSearchChange}
+            onSearchChange={setSearchInput}
             onGenreChange={handleGenreChange}
             onSortChange={handleSortChange}
           />
 
+          {loading && <p className="catalog-status">Actualizando resultados...</p>}
+
           {hasResults ? (
             <>
+              <p className="catalog-results">
+                {totalItems} {totalItems === 1 ? "resultado" : "resultados"}
+              </p>
+
               <ViniloList vinilos={vinilos} />
 
               <div className="vinilo-pagination">
                 <button
-                  className="button"
+                  className="button pagination-button"
                   type="button"
                   disabled={!hasPrevPage}
                   onClick={() => setPage((currentPage) => currentPage - 1)}
@@ -128,10 +168,12 @@ function VinilosPage() {
                   Anterior
                 </button>
 
-                <span>Página {page}</span>
+                <span className="pagination-info">
+                  Página {page} de {totalPages}
+                </span>
 
                 <button
-                  className="button"
+                  className="button pagination-button"
                   type="button"
                   disabled={!hasNextPage}
                   onClick={() => setPage((currentPage) => currentPage + 1)}
@@ -141,9 +183,11 @@ function VinilosPage() {
               </div>
             </>
           ) : (
-            <p className="empty-message">
-              No encontramos resultados para la búsqueda
-            </p>
+            !loading && (
+              <p className="empty-message">
+                No encontramos resultados para la búsqueda
+              </p>
+            )
           )}
         </div>
       </section>

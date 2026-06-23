@@ -2,40 +2,58 @@ import ViniloList from "../components/ViniloList";
 import { Link } from "react-router-dom";
 import ViniloCarousel from "../components/ViniloCarousel";
 import { useState, useEffect } from "react";
-import { getVinilos } from "../services/viniloService";
+import { getVinilos, getVinilosFeatured } from "../services/viniloService";
 
 function Home() {
-  const [vinilos, setVinilos] = useState([]);
+  const [featuredVinilos, setFeaturedVinilos] = useState([]);
+  const [newVinilos, setNewVinilos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  // const modaProducts = vinilos.filter((product) =>
-  //   product?.category?.startsWith("Moda"),
-  // );
 
   useEffect(() => {
     const loadVinilos = async () => {
       try {
-        const { data } = await getVinilos({ limit: 100 });
-        setVinilos(data);
+        const dataFeatured = await getVinilosFeatured();
+        setFeaturedVinilos(dataFeatured.vinilos);
+
+        const dataNew = await getVinilos({
+          sortBy: "year",
+          order: "desc",
+          limit: 3,
+        });
+        setNewVinilos(dataNew.vinilos);
       } catch {
         setError("No se pudieron cargar los vinilos");
       } finally {
         setLoading(false);
       }
     };
+
     loadVinilos();
   }, []);
 
-  const featuredVinilos = vinilos.filter((vinilo) => vinilo.featured);
-  const newVinilos = vinilos.slice(0, 3); // 3 primeras
-
   if (loading) {
-    return <p className="empty-message">Cargando vinilos...</p>;
+    return (
+      <main>
+        <section className="hero">
+          <div className="container">
+            <p className="empty-message">Cargando vinilos...</p>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   if (error) {
-    return <p className="empty-message">{error}</p>;
+    return (
+      <main>
+        <section className="hero">
+          <div className="container">
+            <p className="empty-message">{error}</p>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
@@ -52,11 +70,9 @@ function Home() {
           <span className="hero-label">Proyecto final</span>
           <h1>Catálogo de Vinilos</h1>
           <p>
-            Explora vinilos, consulta sus detalles y administra el
-            contenido desde un panel privado.
+            Explora vinilos, consulta sus detalles y administra el contenido
+            desde un panel privado.
           </p>
-
-          {/* <SearchBox vinilos={vinilos} /> */}
 
           <Link className="button" to="/vinilos">
             Ver catálogo
@@ -64,23 +80,27 @@ function Home() {
         </div>
       </section>
 
-      <section className="featured-section">
-        <div className="container">
-          <h2>Contenido destacado</h2>
+      {featuredVinilos.length > 0 && (
+        <section className="featured-section">
+          <div className="container">
+            <h2>Contenido destacado</h2>
+            <ViniloList vinilos={featuredVinilos} />
+          </div>
+        </section>
+      )}
 
-          <ViniloList vinilos={featuredVinilos} />
-        </div>
-      </section>
+      {featuredVinilos.length > 0 && (
+        <ViniloCarousel vinilos={featuredVinilos} />
+      )}
 
-      <ViniloCarousel vinilos={vinilos} />
-
-      <section className="new-vinilos-section">
-        <div className="container">
-          <h2>Nuevos vinilos</h2>
-
-          <ViniloList vinilos={newVinilos} />
-        </div>
-      </section>
+      {newVinilos.length > 0 && (
+        <section className="new-vinilos-section">
+          <div className="container">
+            <h2>Nuevos vinilos</h2>
+            <ViniloList vinilos={newVinilos} />
+          </div>
+        </section>
+      )}
     </main>
   );
 }

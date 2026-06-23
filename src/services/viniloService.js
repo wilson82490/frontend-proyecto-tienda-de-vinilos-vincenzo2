@@ -71,6 +71,18 @@ export const getVinilos = async ({
   return handleResponse(response);
 };
 
+export const getVinilosGenres = async () => {
+  const response = await fetch(`${API_URL}/genres`);
+
+  return handleResponse(response);
+};
+
+export const getVinilosFeatured = async () => {
+  const response = await fetch(`${API_URL}/featured`);
+
+  return handleResponse(response);
+};
+
 export const getViniloById = async (viniloId) => {
   const response = await fetch(`${API_URL}/${viniloId}`);
 

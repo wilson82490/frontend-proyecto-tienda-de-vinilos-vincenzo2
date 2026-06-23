@@ -25,8 +25,8 @@ function AdminVinilosPage() {
   useEffect(() => {
     const loadVinilos = async () => {
       try {
-        const { data } = await getVinilos({ limit: 100 });
-        setVinilos(data);
+        const { vinilos } = await getVinilos({ limit: 100 });
+        setVinilos(vinilos);
       } catch {
         setLoadError("No se pudieron cargar los vinilos");
       } finally {
@@ -197,10 +197,10 @@ function AdminVinilosPage() {
         {vinilos.map((vinilo) => (
           <article className="admin-list-item" key={vinilo._id}>
             <img src={vinilo.image} alt={vinilo.title} />
-            <div>
+            <div className="admin-list-content">
               <h3>{vinilo.title}</h3>
               <p>
-                {vinilo.genre} • {vinilo.year}{" "}
+                {vinilo.genre} • {vinilo.year}
               </p>
 
               <div className="admin-actions">

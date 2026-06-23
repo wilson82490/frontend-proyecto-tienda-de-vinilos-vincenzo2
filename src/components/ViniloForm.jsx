@@ -163,8 +163,6 @@ function ViniloForm({ onCreateVinilo, vinilo, onUpdateVinilo, isSaving }) {
 
         {isSaving ? "Guardando..." : "Guardar vinilo"}
       </button>
-
-      <pre>{JSON.stringify(form, null, 2)}</pre>
     </form>
   );
 }

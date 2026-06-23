@@ -164,7 +164,7 @@ function RegisterPage() {
               Registrar
             </button>
 
-            <p>
+            <p className="auth-footer">
               ¿Ya tienes cuenta? <Link to="/auth/login">Inicia sesión</Link>
             </p>
           </form>

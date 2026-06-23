@@ -11,8 +11,8 @@ function Header() {
   useEffect(() => {
     const loadVinilos = async () => {
       try {
-        const { data } = await getVinilos({ limit: 100 });
-        setVinilos(data);
+        const { vinilos } = await getVinilos({ limit: 100 });
+        setVinilos(vinilos);
       } catch {
         setVinilos([]);
       }

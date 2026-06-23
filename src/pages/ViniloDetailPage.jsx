@@ -57,9 +57,12 @@ function ViniloDetailPage() {
             <div className="vinilo-detail-content">
               <h1>{vinilo.title}</h1>
 
+              <div className="vinilo-detail-meta">
+                <span className="vinilo-detail-genre">{vinilo.genre}</span>
+                <span className="vinilo-detail-year">{vinilo.year}</span>
+              </div>
+
               <p className="vinilo-detail-description">{vinilo?.description}</p>
-              <p>Genero: {vinilo.genre}</p>
-              <span>Año: {vinilo.year}</span>
             </div>
           </article>
 

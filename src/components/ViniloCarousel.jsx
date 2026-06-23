@@ -6,7 +6,7 @@ function ViniloCarousel({ vinilos }) {
       <div className="container">
         <div className="vinilo-carousel-header">
           <h2>Contenido destacado</h2>
-          <span>Desleza para ver mas</span>
+          <span>Desliza para ver más</span>
         </div>
 
         <div className="vinilo-carousel">
