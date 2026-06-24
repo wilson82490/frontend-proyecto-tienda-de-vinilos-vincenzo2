@@ -25,6 +25,7 @@ const toViniloPayload = (viniloData) => {
     description: String(viniloData.description ?? "").trim(),
     genre: String(viniloData.genre ?? "").trim(),
     year: Number(viniloData.year),
+    price: Number(viniloData.price),
     image: String(viniloData.image ?? "").trim(),
     featured: Boolean(viniloData.featured),
   };

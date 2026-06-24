@@ -11,6 +11,7 @@ import DashboardPage from "../pages/admin/DashboardPage";
 import AdminVinilosPage from "../pages/admin/AdminVinilosPage";
 import RegisterPage from "../pages/RegisterPage";
 import LoginPage from "../pages/LoginPage";
+import CartPage from "../pages/CartPage";
 
 import adminLoader from "../loaders/adminLoader";
 
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: "vinilos/:id",
         element: <ViniloDetailPage />,
+      },
+      {
+        path: "carrito",
+        element: <CartPage />,
       },
       // {
       //   path: "*",

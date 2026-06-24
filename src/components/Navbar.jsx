@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import CartIcon from "./CartIcon";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ function Navbar() {
     <nav className="header-item">
       <Link to="/">Inicio</Link>
       <Link to="/vinilos">Vinilos</Link>
+      <CartIcon />
 
       {user && user.admin && <Link to="/admin">Admin</Link>}
       {user && (

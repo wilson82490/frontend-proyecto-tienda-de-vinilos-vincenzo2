@@ -3,16 +3,23 @@ import {render, screen} from "@testing-library/react";
 import {MemoryRouter} from "react-router-dom";
 import Navbar from '../components/Navbar';
 import { AuthContext } from "../context/AuthContext.jsx";
+import { CartProvider } from "../context/CartContext.jsx";
+
+const renderNavbar = (authValue) => {
+  render(
+    <MemoryRouter>
+      <AuthContext.Provider value={authValue}>
+        <CartProvider>
+          <Navbar />
+        </CartProvider>
+      </AuthContext.Provider>
+    </MemoryRouter>,
+  );
+};
 
 describe("Navbar", () => {
     it ("espero que muestre el registro y el login", () => {
-        render (
-            <MemoryRouter>
-                <AuthContext.Provider value = {{user: null, logout:()=>{} }}>
-                    <Navbar/>
-                </AuthContext.Provider>
-            </MemoryRouter>
-        );
+        renderNavbar({ user: null, logout: () => {} });
 
         expect(screen.getByRole('link', { name: /login/i })).toBeInTheDocument();
         expect(screen.getByRole('link', { name: /registro/i })).toBeInTheDocument();
@@ -22,13 +29,7 @@ describe("Navbar", () => {
    it("espero que muestre el logout cuando tenga un usuario", () => {
         const user = { name: "Test", email: "test@test.com", admin: false };
 
-        render(
-            <MemoryRouter>
-            <AuthContext.Provider value={{ user, logout: () => {} }}>
-                <Navbar />
-            </AuthContext.Provider>
-            </MemoryRouter>
-        );
+        renderNavbar({ user, logout: () => {} });
 
   expect(screen.getByText("Logout")).toBeInTheDocument();
   expect(screen.queryByText("Admin")).not.toBeInTheDocument();
@@ -37,15 +38,15 @@ describe("Navbar", () => {
 it("espero que muestre el admin cuando el usuario sea admin", () => {
   const user = { name: "Admin", email: "admin@test.com", admin: true };
 
-  render(
-    <MemoryRouter>
-      <AuthContext.Provider value={{ user, logout: () => {} }}>
-        <Navbar />
-      </AuthContext.Provider>
-    </MemoryRouter>
-  );
+  renderNavbar({ user, logout: () => {} });
 
   expect(screen.getByText("Logout")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /admin/i })).toBeInTheDocument();
+});
+
+it("espero que muestre el enlace al carrito", () => {
+  renderNavbar({ user: null, logout: () => {} });
+
+  expect(screen.getByRole("link", { name: /carrito/i })).toHaveAttribute("href", "/carrito");
 });
 })

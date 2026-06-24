@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../utils/formatPrice";
+import AddToCartButton from "./AddToCartButton";
 
 function ViniloCard({ vinilo }) {
   const navigate = useNavigate();
@@ -26,6 +28,13 @@ function ViniloCard({ vinilo }) {
         <h3>{vinilo.title}</h3>
         <p>{vinilo.genre}</p>
         <span>{vinilo.year}</span>
+        <p className="vinilo-price">{formatPrice(vinilo.price)}</p>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+        >
+          <AddToCartButton vinilo={vinilo} />
+        </div>
       </div>
     </article>
   );

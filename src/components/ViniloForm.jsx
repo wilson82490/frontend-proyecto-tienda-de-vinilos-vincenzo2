@@ -6,6 +6,7 @@ const initialForm = {
   description: "",
   genre: "",
   year: "",
+  price: "",
   image: "",
   featured: false,
 };
@@ -55,6 +56,16 @@ function ViniloForm({ onCreateVinilo, vinilo, onUpdateVinilo, isSaving }) {
 
     if (!form.year) {
       alert("Ingrese un año");
+      return;
+    }
+
+    if (!form.price && form.price !== 0) {
+      alert("Ingrese un precio");
+      return;
+    }
+
+    if (Number(form.price) < 0) {
+      alert("El precio no puede ser negativo");
       return;
     }
 
@@ -117,6 +128,19 @@ function ViniloForm({ onCreateVinilo, vinilo, onUpdateVinilo, isSaving }) {
           name="year"
           id="year"
           value={form.year}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="price">Precio (€): </label>
+        <input
+          type="number"
+          name="price"
+          id="price"
+          min="0"
+          step="0.01"
+          value={form.price}
           onChange={handleChange}
         />
       </div>

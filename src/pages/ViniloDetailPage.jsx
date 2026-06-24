@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getViniloById } from "../services/viniloService";
+import { formatPrice } from "../utils/formatPrice";
+import AddToCartButton from "../components/AddToCartButton";
 
 function ViniloDetailPage() {
   const { id } = useParams();
@@ -62,7 +64,13 @@ function ViniloDetailPage() {
                 <span className="vinilo-detail-year">{vinilo.year}</span>
               </div>
 
+              <p className="vinilo-price vinilo-detail-price">
+                {formatPrice(vinilo.price)}
+              </p>
+
               <p className="vinilo-detail-description">{vinilo?.description}</p>
+
+              <AddToCartButton vinilo={vinilo} />
             </div>
           </article>
 
