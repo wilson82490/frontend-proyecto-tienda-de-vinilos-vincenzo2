@@ -1,0 +1,31 @@
+import { Link, Outlet } from "react-router-dom";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
+function Adminlayout() {
+  return (
+    <>
+      <Header />
+
+      <main className="admin-page">
+        <div className="container">
+          <div className="admin-header">
+            <h1>Panel Administración</h1>
+            <p>Gestiona el contenido del catalogo</p>
+          </div>
+
+          <nav className="admin-nav">
+            <Link to="/admin/vinilos">Vinilos</Link>
+            <Link to="/vinilos">Ver sitio publico</Link>
+          </nav>
+
+          <Outlet />
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  );
+}
+
+export default Adminlayout;
