@@ -1,54 +1,23 @@
-# Vinilos Frontend
+# Frontend Catálogo de Películas y Series
 
-Aplicación web de tienda de vinilos desarrollada con React. Consume la API REST del backend para mostrar el catálogo, gestionar el carrito de compras en el cliente y ofrecer un panel de administración para usuarios con rol admin.
+Proyecto final del Bootcamp de Neoland Web Development.
 
----
+## Descripcion
 
-## Características
+Aplicación web para gestionar un catálogo de películas y series.
 
-- **Catálogo de vinilos** con paginación, búsqueda, ordenamiento y filtro por género
-- **Vinilos destacados** en la página de inicio
-- **Detalle de vinilo** con precio formateado
-- **Carrito de compras** persistente en `localStorage` (Context API)
-- Botón **Agregar al carrito** (`AddToCartButton`) e icono con contador en la barra de navegación
-- Página de carrito en `/carrito` con gestión de cantidades y total
-- **Registro e inicio de sesión** con JWT (Context API de autenticación)
-- **Panel de administración** con CRUD de vinilos (solo usuarios admin)
-- Rutas protegidas mediante loader y verificación de rol
-- Tests con **Vitest** y **Testing Library**
+## Tecnologias
 
----
+- React
+- Vite
+- CSS
+- JavaScript
 
-## Stack tecnológico
+## Clonar el repositorio
 
-| Tecnología | Versión / Uso |
-|---|---|
-| React | 19 |
-| Vite | 8 — bundler y dev server |
-| React Router | 7 — enrutamiento |
-| Context API | AuthContext + CartContext |
-| Tailwind CSS | 4 — estilos |
-| Vitest + Testing Library | Tests unitarios |
-| Fetch API | Comunicación con el backend |
+```shell
+git clone https://github.com/jepafeneo/frontend-proyecto-peliculas-series-jean-paul
 
----
-
-## Requisitos previos
-
-- [Node.js](https://nodejs.org/) 18 o superior
-- [npm](https://www.npmjs.com/)
-- Backend de vinilos en ejecución (local o desplegado)
-- Repositorio clonado en tu máquina
-
----
-
-## Instalación y configuración
-
-### 1. Clonar e instalar
-
-```bash
-git clone <url-del-repositorio>
-cd frontend-proyecto-tienda-de-vinilos-vincenzo2
 git switch dev
 npm install
 ```
